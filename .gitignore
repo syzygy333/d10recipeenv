@@ -1,0 +1,44 @@
+# Drupal
+/web/*.*
+/web/core
+/web/libraries
+/web/modules/contrib
+/web/themes/contrib
+/web/profiles/contrib
+
+/web/sites/*
+!/web/sites/default
+/web/sites/default/*
+!/web/sites/default/settings.php
+
+/config/**/.htaccess
+
+# Drush
+/drush/contrib
+
+# Compiled assets
+/web/**/*.css
+!/web/themes/custom/starterkit/**/*.css
+/web/**/*.js
+!/web/**/*.es6.js
+/web/**/*.map
+
+# Project dependencies
+/node_modules
+/vendor/*
+!/vendor/.rsync-filter
+
+# Project test results
+/tests/**/results
+.phpunit.result.cache
+
+# Local dev
+/*.gz
+/*.sql
+/.gitattributes
+
+# PHPStorm
+.idea
+
+# Secure directory
+/secure

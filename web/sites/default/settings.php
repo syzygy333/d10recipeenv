@@ -724,7 +724,6 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  */
 $settings['file_scan_ignore_directories'] = [
   'node_modules',
-  'bower_components',
 ];
 
 /**
@@ -770,32 +769,30 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
  * Keep this code block at the end of this file to take full effect.
  */
 #
-# if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
-#   include $app_root . '/' . $site_path . '/settings.local.php';
-# }
+if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
+  include $app_root . '/' . $site_path . '/settings.local.php';
+}
 
-// Lando environment settings
-if (getenv('LANDO_INFO')) {
-  $lando_info = json_decode(getenv('LANDO_INFO'), TRUE);
+// Automatically generated include for settings managed by ddev.
+$ddev_settings = dirname(__FILE__) . '/settings.ddev.php';
+if (getenv('IS_DDEV_PROJECT') == 'true' && is_readable($ddev_settings)) {
 
   // Files directory paths.
   $settings['file_public_path'] = 'sites/default/files';
   $settings['file_private_path'] = 'sites/default/files/private';
-  $settings['config_sync_directory'] = '/app/config/common';
-  $settings['file_temp_path'] = $_ENV['TEMP'];
+  $settings['config_sync_directory'] = '../config/common';
+  // $settings['file_temp_path'] = $_ENV['TEMP'];
 
-  // Generic hash salt for all local environments.
-  $settings['hash_salt'] = 'BfHE?EG)vJPa3uikBCZWW#ATbDLijMFRZgfkyayYcZYoy>eC7QhdG7qaB4hcm4x$';
-
-  // Allow any domains to access the site with Lando.
-  $settings['trusted_host_patterns'] = [
-    '^(.+)$',
+  $databases['d7_database']['default'] = [
+    'database' => 'drupal7',
+    'username' => 'drupal7',
+    'password' => 'drupal7',
+    'prefix' => '',
+    'host' => 'db',
+    'port' => 3306,
+    'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+    'driver' => 'mysql',
   ];
-
-  // Enable Configuration Read-only Mode (Only on Prod & UAT)
-  if (PHP_SAPI !== 'cli') {
-    $settings['config_readonly'] = TRUE;
-  }
 
   // Add default config split settings for local development.
   $config['config_split.config_split.local']['status'] = TRUE;
@@ -803,34 +800,5 @@ if (getenv('LANDO_INFO')) {
   $config['config_split.config_split.uat']['status'] = FALSE;
   $config['config_split.config_split.prod']['status'] = FALSE;
 
-  $databases['default']['default'] = [
-    'database' => $lando_info['database']['creds']['database'],
-    'username' => $lando_info['database']['creds']['user'],
-    'password' => $lando_info['database']['creds']['password'],
-    'prefix' => '',
-    'host' => $lando_info['database']['internal_connection']['host'],
-    'port' => $lando_info['database']['internal_connection']['port'],
-    'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
-    'driver' => 'mysql',
-  ];
-
-  // Check for PHP Memcached libraries.
-  $memcache_exists = class_exists('Memcache', FALSE);
-  $memcached_exists = class_exists('Memcached', FALSE);
-  $memcache_module_is_present = file_exists(DRUPAL_ROOT . '/modules/contrib/memcache/memcache.services.yml');
-  if ($memcache_module_is_present && ($memcache_exists || $memcached_exists)) {
-    $settings['memcache']['servers'] = ['cache:11211' => 'default'];
-    $settings['memcache']['bins'] = ['default' => 'default'];
-    $settings['memcache']['key_prefix'] = 'site_prefix_';
-
-    if (!InstallerKernel::installationAttempted()) {
-      $settings['cache']['default'] = 'cache.backend.memcache';
-    }
-  }
-}
-
-// Automatically generated include for settings managed by ddev.
-$ddev_settings = dirname(__FILE__) . '/settings.ddev.php';
-if (getenv('IS_DDEV_PROJECT') == 'true' && is_readable($ddev_settings)) {
   require $ddev_settings;
 }
