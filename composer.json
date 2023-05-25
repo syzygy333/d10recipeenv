@@ -1,0 +1,118 @@
+{
+    "name": "oomphinc/drupal-scaffold",
+    "description": "A Drupal scaffold project",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Oomph, Inc.",
+            "email": "devops@oomphinc.com",
+            "homepage": "https://www.oomphinc.com/"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        },
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/syzygy333/d10recipes"
+        }
+    ],
+    "require": {
+        "composer/installers": "^2.0",
+        "cweagans/composer-patches": "^1.9",
+        "drupal-composer/preserve-paths": "^0.1.4",
+        "drupal/admin_toolbar": "^3.4.0",
+        "drupal/coder": "^8.3",
+        "drupal/config_split": "^1.9",
+        "drupal/core-composer-scaffold": "^10.0",
+        "drupal/core-project-message": "^10.0",
+        "drupal/core-recommended": "^10.0",
+        "drupal/core-vendor-hardening": "^10.0",
+        "drupal/devel": "^5.0",
+        "drupal/seckit": "^2.0",
+        "drush/drush": "^11.5",
+        "oomphinc/composer-installers-extender": "^2",
+        "syzygy333/d10recipes": "^1.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "cweagans/composer-patches": true,
+            "drupal-composer/preserve-paths": true,
+            "drupal/core-composer-scaffold": true,
+            "drupal/core-project-message": true,
+            "drupal/core-vendor-hardening": true,
+            "composer/installers": true,
+            "oomphinc/composer-installers-extender": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
+        },
+        "platform": {
+            "php": "8.1"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
+        ],
+        "post-update-cmd": [
+            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
+        ],
+        "test:php": [
+            "vendor/bin/phpunit"
+        ],
+        "validate:php": [
+            "vendor/bin/phpcs"
+        ]
+    },
+    "extra": {
+        "installer-types": ["bower-asset", "npm-asset"],
+        "installer-paths": {
+            "web/core": ["type:drupal-core"],
+            "web/libraries/{$name}": [
+                "type:drupal-library",
+                "type:bower-asset",
+                "type:npm-asset"
+            ],
+            "web/modules/contrib/{$name}": ["type:drupal-module"],
+            "web/profiles/contrib/{$name}": ["type:drupal-profile"],
+            "web/recipes/custom/{$name}": ["type:drupal-custom-recipe"],
+            "web/recipes/contrib/{$name}": ["type:drupal-contrib-recipe"],
+            "web/themes/contrib/{$name}": ["type:drupal-theme"],
+            "drush/contrib/{$name}": ["type:drupal-drush"]
+        },
+        "patches": {
+            "drupal/core": {
+                "Allow recipes to be applied": "https://git.drupalcode.org/project/distributions_recipes/-/raw/patch/recipe.patch"
+            }
+        },
+        "preserve-paths": [],
+        "drupal-scaffold": {
+            "locations": {
+                "web-root": "web"
+            }
+        }
+    },
+    "require-dev": {
+        "jangregor/phpstan-prophecy": "^1.0",
+        "mglaman/phpstan-drupal": "^1.1",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan": "^1.8",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-phpunit": "^1.1",
+        "phpstan/phpstan-strict-rules": "^1.3",
+        "phpunit/phpunit": "^8",
+        "sensiolabs/security-checker": "^6.0",
+        "slevomat/coding-standard": "^8.1",
+        "symfony/phpunit-bridge": "^5.1"
+    }
+}
